@@ -6,15 +6,31 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     
     <script type="text/javascript" src="lib/jquery-3.2.1.js"></script>
-    <script type="text/javascript" src="js/inputHint.js"></script>
+
     <script type="text/javascript" src="js/quiz.js"></script>
     <script type="text/javascript" src="js/question.js"></script>
-    <script type="text/javascript" src="js/quizStructure.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     
 
   </head>
   <body>
-    <div class="main-container"></div>
+    <div class="quiz-container hide" data-hook="quiz-template">
+      <div class='question-area'>
+        <h2 class="question-number"></h2>
+        <p class="question"></p>
+        <input type="text" name="user-answer" class="answer-field hint" value="Enter Answere Here">
+        <input class="submit-and-proceed-button" type="button" value="Next >>">
+        <p class="current-score">Score 0/0</p>
+        <p class="answer-status"></p>
+      </div>
+
+      <div class="final-view hide">
+        <h3 class="final-score">final-score</h3>
+        <h4 class="final-view-headline">Incorrectly Answered Questions are: </h4>
+        <div class="incorrect-questions"></div>
+      </div>
+    </div>
+    <div class="main-container">
+    </div>
   </body>
 </html>

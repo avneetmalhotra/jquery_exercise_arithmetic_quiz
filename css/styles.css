@@ -37,36 +37,36 @@ body{
 }
 
 /*quesArea*/
-.ques-area{
+.question-area{
   position: relative;
 }
 
-.question-no{
+.question-number{
   margin: 4px auto 20px;
   text-align: center;
 }
 
-.ques-area .question{
+.question-area .question{
   margin: 0 0 30px;
 }
 
-.answer{
+.answer-field{
   position: relative;
   left: 10px;
 }
 
-.proceed-btn{
+.submit-and-proceed-button{
   position: absolute;
   right: 20px;
 }
 
-.curr-score{
+.current-score{
   margin: 8px auto;
   text-align: center;
   box-sizing: border-box; 
 }
 
-.ans-status{
+.answer-status{
   margin: 7px auto;
   padding: 4px;
   text-align: center;
@@ -75,13 +75,3 @@ body{
   display: none;
   box-sizing: border-box;
 }
-
-/*finalDiv*/
-/*.finaldiv{
-  overflow: scroll;
-}
-*/
-
-
-
-

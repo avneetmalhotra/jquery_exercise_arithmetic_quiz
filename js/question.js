@@ -1,10 +1,11 @@
-function Question(elements$Objs){
-  this.$question = elements$Objs.ques;
-  this.$questionNo = elements$Objs.quesNo;
+//requirev 
+function Question(elements){
+  this.$question = elements.$question;
+  this.$questionNumber = elements.$questionNumber;
 }
 
-Question.prototype.init = function(quesNum){
-  this.quesNum = quesNum;
+Question.prototype.init = function(questionNumber){
+  this.questionNumber = questionNumber;
   this.generateQuestion();
   this.appendQuestionDetails();
 };
@@ -15,11 +16,11 @@ Question.prototype.generateQuestion = function(){
       operatorsArray = ['+', '-', 'x', '/'],
       operator = operatorsArray[Math.floor(Math.random() * 4)];
 
-  this.ques = 'Evaluate : ' + operand1 +  operator + operand2;
-  this.evaluateExp(operand1, operator, operand2);
+  this.question = 'Evaluate : ' + operand1 +  operator + operand2;
+  this.evaluateAnswer(operand1, operator, operand2);
 };
 
-Question.prototype.evaluateExp = function(operand1, operator, operand2){
+Question.prototype.evaluateAnswer = function(operand1, operator, operand2){
   switch(operator){
     case '+':
       this.$question.data('answer', (operand1 + operand2).toString());
@@ -40,6 +41,6 @@ Question.prototype.evaluateExp = function(operand1, operator, operand2){
 };
 
 Question.prototype.appendQuestionDetails = function(){
-  this.$questionNo.text('Question No: ' + this.quesNum);
-  this.$question.text(this.ques);
+  this.$questionNumber.text('Question No: ' + this.questionNumber);
+  this.$question.text(this.question);
 };
