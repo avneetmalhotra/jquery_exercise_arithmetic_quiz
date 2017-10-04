@@ -1,4 +1,3 @@
-//requirev 
 function Question(elements){
   this.$question = elements.$question;
   this.$questionNumber = elements.$questionNumber;

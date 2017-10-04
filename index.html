@@ -16,18 +16,18 @@
   <body>
     <div class="quiz-container hide" data-hook="quiz-template">
       <div class='question-area'>
-        <h2 class="question-number"></h2>
-        <p class="question"></p>
-        <input type="text" name="user-answer" class="answer-field hint" value="Enter Answere Here">
-        <input class="submit-and-proceed-button" type="button" value="Next >>">
-        <p class="current-score">Score 0/0</p>
-        <p class="answer-status"></p>
+        <h2 class="question-number" data-hook="question-number"></h2>
+        <p class="question" data-hook="question"></p>
+        <input type="text" name="user-answer" class="answer-field" data-hook="answer-field" placeholder="Enter Answer Here">
+        <input class="submit-and-proceed-button" data-hook="submit-and-proceed-button" type="button" value="Next >>">
+        <p class="current-score" data-hook="current-score">Score 0/0</p>
+        <p class="answer-status" data-hook="answer-status"></p>
       </div>
 
       <div class="final-view hide">
-        <h3 class="final-score">final-score</h3>
-        <h4 class="final-view-headline">Incorrectly Answered Questions are: </h4>
-        <div class="incorrect-questions"></div>
+        <h3 class="final-score" data-hook="final-score">final-score</h3>
+        <h4 class="final-view-headline" data-hook="final-view-headline">Incorrectly Answered Questions are: </h4>
+        <div class="incorrect-questions" data-hook="incorrect-questions"></div>
       </div>
     </div>
     <div class="main-container">

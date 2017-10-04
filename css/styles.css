@@ -4,16 +4,16 @@ body{
   font-size: 18px;
 }
 
+::placeholder{
+  color: #999999;
+}
+
 .hide{
   display: none;
 }
 
 .show{
   display: block !important;
-}
-
-.hint{
-  color: #999999;
 }
 
 .correct{

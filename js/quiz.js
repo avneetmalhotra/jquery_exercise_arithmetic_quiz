@@ -1,5 +1,4 @@
 //require('question.js');
-
 function Quiz(totalNumberOfQuestions){
   this.totalNumberOfQuestions = totalNumberOfQuestions;
   this.questionNumber = 0;
@@ -14,29 +13,44 @@ function Quiz(totalNumberOfQuestions){
 
 Quiz.prototype.validAnsRegex = /^(\-)?\d+(.\d+)?$/;
 Quiz.prototype.timeoutDurationAfterAnswerSubmission = 2000;
-Quiz.prototype.answerFieldHint = 'Enter Answer Here';
+
+var questionAreaElementsSelectors = { $question : '[data-hook="question"]',
+                                      $questionNumber : '[data-hook="question-number"]',
+                                      $submitAndProceedButton : '[data-hook="submit-and-proceed-button"]',
+                                      $answerStatus : '[data-hook="answer-status"]',
+                                      $currentScore : '[data-hook="current-score"]',
+                                      $answerField : '[data-hook="answer-field"]'
+                                    };
+
+var finalViewElementsSelectors = { $finalScore : '[data-hook="final-score"]',
+                                   $incorrectQuestions : '[data-hook="final-view-headline"]',
+                                   $finalViewHeadline : '[data-hook="incorrect-questions"]'
+                                  };
 
 Quiz.prototype.init = function(){
-  this.$question = this.$questionArea.find('.question');
-  this.$questionNumber  = this.$questionArea.find('.question-number') ;
-  this.$submitAndProceedButton = this.$questionArea.find('.submit-and-proceed-button');
-  this.$answerStatus = this.$questionArea.find('.answer-status');
-  this.$currentScore = this.$questionArea.find('.current-score');
+  var _this = this;
 
-  this.$finalScore = this.$finalView.find('.final-score');
-  this.$incorrectQuestions = this.$finalView.find('.incorrect-questions');
-  this.$finalViewHeadline = this.$finalView.find('.final-view-headline');
+  //defining class variables for quizArea's elements
+  for(elementSelector in questionAreaElementsSelectors){
+    _this[elementSelector] = _this.$questionArea.find(questionAreaElementsSelectors[elementSelector]);
+  }
+
+  //defining class variables for finalView's elements
+  for(elementSelector in finalViewElementsSelectors){
+    _this[elementSelector] = _this.$finalView.find(finalViewElementsSelectors[elementSelector]);
+  }
 
   this.question = new Question({'$questionNumber' : this.$questionNumber,
                                 '$question' : this.$question
                                });
-  
-  this.getNewQuestion();
-  
-  this.displayQuiz();
 
-  this.bindFocusAndBlurEventsToAnswerField();
-  
+  this.getNewQuestion();
+
+  //disaply quiz
+  this.$quizParent.append(this.$quizContainer.removeClass('hide'));
+
+  this.bindBlurEventToAnswerField();
+
   this.$questionArea.find('.submit-and-proceed-button').on('click', this.checkAnswer());
 };
 
@@ -52,26 +66,14 @@ Quiz.prototype.changeSubmitAndProceedButtonValue = function(newValue){
   this.$submitAndProceedButton.val(newValue);
 };
 
-///---///
-Quiz.prototype.displayQuiz = function(){
-  this.$quizParent.append(this.$quizContainer.removeClass('hide'));
-};
-
-////
-Quiz.prototype.bindFocusAndBlurEventsToAnswerField = function(){
-  this.$answerField = this.$questionArea.find('.answer-field');
-
-  this.$answerField.on('focus', function(){
-    $(this).removeClass('hint').val('');    
-  });
-
+Quiz.prototype.bindBlurEventToAnswerField = function(){
   var _this = this;
 
   this.$answerField.on('blur', function(){
     var $answerField = $(this);
 
     if(!$answerField.val().trim().length)
-      $answerField.val(_this.answerFieldHint).addClass('hint');
+      $answerField.val('');
   });
 };
 
@@ -86,7 +88,7 @@ Quiz.prototype.checkAnswer = function(){
     if(userAnswer === _this.answerFieldHint)
       alert('No answer entered. Please enter one.')
 
-    else if(!_this.isAnswerValid(userAnswer))
+    else if(!_this.validAnsRegex.test(userAnswer))
       alert('Answer should be a number only.');
 
     else{
@@ -118,7 +120,7 @@ Quiz.prototype.displayFinalView = function(){
   return function(finalScore){
     //if all answers are correct
     if(_this.totalNumberOfQuestions === _this.numberOfCorrectAnswers){
-      _this.changeFinalViewHeadline('All answers were correct.')
+      _this.$finalViewHeadline.text('All answers were correct.');
       _this.$incorrectQuestions.remove();
     }
 
@@ -127,10 +129,6 @@ Quiz.prototype.displayFinalView = function(){
     _this.$questionArea.addClass('hide');
     _this.$finalView.addClass('show');
   }
-};
-
-Quiz.prototype.changeFinalViewHeadline = function(newText){
-  this.$finalViewHeadline.text(newText);
 };
 
 Quiz.prototype.saveIncorrectQuestions = function(){
@@ -142,8 +140,8 @@ Quiz.prototype.resetAllFields = function(){
   var _this = this;
 
   return function(){
+    _this.resetAnswerField();
     _this.clearAnswerStatus();
-    _this.resetAnswerFieldToHint();
     _this.updateCurrentScore(_this.getScore());
     _this.getNewQuestion();
   };
@@ -153,12 +151,12 @@ Quiz.prototype.clearAnswerStatus = function(){
   this.$answerStatus.removeClass('correct incorrect show');
 };
 
-Quiz.prototype.resetAnswerFieldToHint = function(){
-  this.$answerField.val(this.answerFieldHint).addClass('hint');
+Quiz.prototype.resetAnswerField = function(){
+  this.$answerField.val('');
 };
 
 Quiz.prototype.updateCurrentScore = function(score){
-  this.$currentScore.text('Score: ' + score);  
+  this.$currentScore.text('Score: ' + score);
 };
 
 //utility functions
@@ -169,7 +167,3 @@ Quiz.prototype.getScore = function(){
 Quiz.prototype.isLastQues = function(){
   return this.totalNumberOfQuestions === this.questionNumber;
 };
-
-Quiz.prototype.isAnswerValid = function(userAnswer){
-  return this.validAnsRegex.test(userAnswer);
-};  
