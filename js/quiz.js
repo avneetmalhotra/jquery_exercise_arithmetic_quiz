@@ -1,44 +1,24 @@
 //require('question.js');
-function Quiz(totalNumberOfQuestions){
+function Quiz(totalNumberOfQuestions, options, questionAreaElementsSelectors, finalViewElementsSelectors){
   this.totalNumberOfQuestions = totalNumberOfQuestions;
   this.questionNumber = 0;
   this.numberOfCorrectAnswers = 0;
 
-  this.$quizParent = $('.main-container');
+  this.$quizParent = options.$quizParent;
+  this.$quizContainer = options.$quizTemplate.clone().removeAttr('data-hook');
+  this.$questionArea = this.$quizContainer.find(options.questionAreaSelector);
+  this.$finalView = this.$quizContainer.find(options.finalViewSelector);
 
-  this.$quizContainer = $('div[data-hook="quiz-template"]').clone().removeAttr('data-hook');
-  this.$questionArea = this.$quizContainer.find('.question-area');
-  this.$finalView = this.$quizContainer.find('.final-view');
+  this.questionAreaElementsSelectors = questionAreaElementsSelectors;
+  this.finalViewElementsSelectors = finalViewElementsSelectors;
 }
 
 Quiz.prototype.validAnsRegex = /^(\-)?\d+(.\d+)?$/;
 Quiz.prototype.timeoutDurationAfterAnswerSubmission = 2000;
 
-var questionAreaElementsSelectors = { $question : '[data-hook="question"]',
-                                      $questionNumber : '[data-hook="question-number"]',
-                                      $submitAndProceedButton : '[data-hook="submit-and-proceed-button"]',
-                                      $answerStatus : '[data-hook="answer-status"]',
-                                      $currentScore : '[data-hook="current-score"]',
-                                      $answerField : '[data-hook="answer-field"]'
-                                    };
-
-var finalViewElementsSelectors = { $finalScore : '[data-hook="final-score"]',
-                                   $incorrectQuestions : '[data-hook="final-view-headline"]',
-                                   $finalViewHeadline : '[data-hook="incorrect-questions"]'
-                                  };
-
 Quiz.prototype.init = function(){
-  var _this = this;
-
-  //defining class variables for quizArea's elements
-  for(elementSelector in questionAreaElementsSelectors){
-    _this[elementSelector] = _this.$questionArea.find(questionAreaElementsSelectors[elementSelector]);
-  }
-
-  //defining class variables for finalView's elements
-  for(elementSelector in finalViewElementsSelectors){
-    _this[elementSelector] = _this.$finalView.find(finalViewElementsSelectors[elementSelector]);
-  }
+  this.defineClassVariables(this.$questionArea, this.questionAreaElementsSelectors);
+  this.defineClassVariables(this.$finalView, this.finalViewElementsSelectors);
 
   this.question = new Question({'$questionNumber' : this.$questionNumber,
                                 '$question' : this.$question
@@ -51,7 +31,13 @@ Quiz.prototype.init = function(){
 
   this.bindBlurEventToAnswerField();
 
-  this.$questionArea.find('.submit-and-proceed-button').on('click', this.checkAnswer());
+  this.$questionArea.find(this.$submitAndProceedButton[0]).on('click', this.checkAnswer());
+};
+
+Quiz.prototype.defineClassVariables = function($container, containersElementsSelectors){
+  for(elementSelector in containersElementsSelectors){
+    this['$' + elementSelector] = $container.find(containersElementsSelectors[elementSelector]);
+  }
 };
 
 Quiz.prototype.getNewQuestion = function(){
